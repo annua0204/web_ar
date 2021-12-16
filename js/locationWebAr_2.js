@@ -4,15 +4,18 @@ window.onload = () => {
 };
 
 function getLocation() { //取得 經緯度
-    
+
 }
 
 function staticLoadPlaces() {
     let lat = 0;
     let lng = 0;
 
-    if (navigator.geolocation) { //
-        navigator.geolocation.getCurrentPosition(showPosition); //有拿到位置就呼叫 showPosition 函式
+    if (navigator.geolocation) {
+        //有拿到位置就呼叫 showPosition 函式
+        navigator.geolocation.getCurrentPosition(showPosition);
+        // 緯度 (Latitude)
+        // 經度 (Longitude)
         lat = position.coords.latitude;
         lng = position.coords.longitude;
         console('position lat:[' + lat + '], lng:[' + lng + ']')
