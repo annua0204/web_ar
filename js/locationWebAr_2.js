@@ -3,10 +3,6 @@ window.onload = () => {
     renderPlaces(places);
 };
 
-function getLocation() { //取得 經緯度
-
-}
-
 function staticLoadPlaces() {
     let lat = 0;
     let lng = 0;
