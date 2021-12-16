@@ -3,36 +3,52 @@ window.onload = () => {
     renderPlaces(places);
 };
 
+function getLocation() { //取得 經緯度
+    
+}
+
 function staticLoadPlaces() {
-   return [
-       {
-           name: 'Magnemite',
-           location: {
-               lat: 25.080340,
-               lng: 121.569930,
-           }
-       },
-   ];
+    let lat = 0;
+    let lng = 0;
+
+    if (navigator.geolocation) { //
+        navigator.geolocation.getCurrentPosition(showPosition); //有拿到位置就呼叫 showPosition 函式
+        lat = position.coords.latitude;
+        lng = position.coords.longitude;
+        console('position lat:[' + lat + '], lng:[' + lng + ']')
+    } else {
+        lat = 25.080340;
+        lng = 121.569930;
+        console('static lat:[' + lat + '], lng:[' + lng + ']')
+    }
+
+    return [{
+        name: 'Magnemite',
+        location: {
+            lat,
+            lng
+        }
+    }, ];
 }
 
 function renderPlaces(places) {
-   let scene = document.querySelector('a-scene');
+    let scene = document.querySelector('a-scene');
 
-   places.forEach((place) => {
-       let latitude = place.location.lat;
-       let longitude = place.location.lng;
+    places.forEach((place) => {
+        let latitude = place.location.lat;
+        let longitude = place.location.lng;
 
-       let model = document.createElement('a-entity');
-       model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
-       model.setAttribute('gltf-model', '../assets/magnemite/scene.gltf');
-       model.setAttribute('rotation', '0 180 0');
-       model.setAttribute('animation-mixer', '');
-       model.setAttribute('scale', '0.5 0.5 0.5');
+        let model = document.createElement('a-entity');
+        model.setAttribute('gps-entity-place', `latitude: ${latitude}; longitude: ${longitude};`);
+        model.setAttribute('gltf-model', '../assets/magnemite/scene.gltf');
+        model.setAttribute('rotation', '0 180 0');
+        model.setAttribute('animation-mixer', '');
+        model.setAttribute('scale', '0.5 0.5 0.5');
 
-       model.addEventListener('loaded', () => {
-           window.dispatchEvent(new CustomEvent('gps-entity-place-loaded'))
-       });
+        model.addEventListener('loaded', () => {
+            window.dispatchEvent(new CustomEvent('gps-entity-place-loaded'))
+        });
 
-       scene.appendChild(model);
-   });
+        scene.appendChild(model);
+    });
 }
