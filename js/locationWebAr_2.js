@@ -1,33 +1,53 @@
 window.onload = () => {
-    let places = staticLoadPlaces();
-    renderPlaces(places);
+    const promise = new Promise((resolve, reject) => {
+        let lat = 0;
+        let lng = 0;
+
+        if (navigator.geolocation) {
+            //有拿到位置就呼叫 showPosition 函式
+            navigator.geolocation.getCurrentPosition((position) => {
+                // success: 緯度 (Latitude), 經度 (Longitude)
+                lat = position.coords.latitude;
+                lng = position.coords.longitude;
+                console.log('success: lat:[' + lat + '], lng:[' + lng + ']')
+                resolve([{
+                    name: 'Magnemite',
+                    location: {
+                        lat,
+                        lng
+                    }
+                }])
+            }, () => {
+                staticLoadPlaces(resolve)
+            });
+        } else {
+            staticLoadPlaces(resolve)
+        }
+    })
+
+    promise.then((places) => {
+        renderPlaces(places);
+    })
 };
 
-function staticLoadPlaces() {
-    let lat = 0;
-    let lng = 0;
 
-    if (navigator.geolocation) {
-        //有拿到位置就呼叫 showPosition 函式
-        navigator.geolocation.getCurrentPosition(showPosition);
-        // 緯度 (Latitude)
-        // 經度 (Longitude)
-        lat = position.coords.latitude;
-        lng = position.coords.longitude;
-        console('position lat:[' + lat + '], lng:[' + lng + ']')
-    } else {
-        lat = 25.080340;
-        lng = 121.569930;
-        console('static lat:[' + lat + '], lng:[' + lng + ']')
-    }
 
-    return [{
-        name: 'Magnemite',
-        location: {
-            lat,
-            lng
+function staticLoadPlaces(resolve) {
+    let arr = [];
+    let getObj = ((lat, lng) => {
+        return {
+            name: 'Magnemite',
+            location: {
+                lat,
+                lng
+            }
         }
-    }, ];
+    });
+    // 公司
+    arr.push(getObj(25.080340, 121.569930))
+    // 新莊家
+    arr.push(getObj(25.027830, 121.415760))
+    resolve(arr);
 }
 
 function renderPlaces(places) {
